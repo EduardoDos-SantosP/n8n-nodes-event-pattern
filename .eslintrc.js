@@ -1,4 +1,6 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+/**
+ * @type {import('@types/eslint').ESLint.ConfigData}
+ */
 module.exports = {
 	root: true,
 
@@ -75,7 +77,7 @@ module.exports = {
 				'n8n-nodes-base/node-param-default-wrong-for-fixed-collection': 'error',
 				'n8n-nodes-base/node-param-default-wrong-for-multi-options': 'error',
 				'n8n-nodes-base/node-param-default-wrong-for-number': 'error',
-				'n8n-nodes-base/node-execute-block-wrong-error-thrown': 'error',
+				'n8n-nodes-base/node-param-default-wrong-for-simplify': 'error',
 				'n8n-nodes-base/node-param-default-wrong-for-string': 'error',
 				'n8n-nodes-base/node-param-description-boolean-without-whether': 'error',
 				'n8n-nodes-base/node-param-description-comma-separated-hyphen': 'error',
@@ -98,11 +100,8 @@ module.exports = {
 				'n8n-nodes-base/node-param-description-unencoded-angle-brackets': 'error',
 				'n8n-nodes-base/node-param-description-unneeded-backticks': 'error',
 				'n8n-nodes-base/node-param-description-untrimmed': 'error',
-				'n8n-nodes-base/node-param-description-lowercase-first-char': 'error',
-				'n8n-nodes-base/node-param-description-miscased-id': 'error',
-				'n8n-nodes-base/node-param-description-miscased-json': 'error',
-				'n8n-nodes-base/node-param-description-miscased-url': 'error',
-				'n8n-nodes-base/node-param-description-miscased-url': 'error',
+				'n8n-nodes-base/node-param-description-url-missing-protocol': 'error',
+				'n8n-nodes-base/node-param-description-weak': 'error',
 				'n8n-nodes-base/node-param-description-wrong-for-dynamic-multi-options': 'error',
 				'n8n-nodes-base/node-param-description-wrong-for-dynamic-options': 'error',
 				'n8n-nodes-base/node-param-description-wrong-for-ignore-ssl-issues': 'error',
@@ -118,6 +117,7 @@ module.exports = {
 				'n8n-nodes-base/node-param-display-name-wrong-for-dynamic-multi-options': 'error',
 				'n8n-nodes-base/node-param-display-name-wrong-for-dynamic-options': 'error',
 				'n8n-nodes-base/node-param-display-name-wrong-for-simplify': 'error',
+				'n8n-nodes-base/node-param-display-name-wrong-for-update-fields': 'error',
 				'n8n-nodes-base/node-param-min-value-wrong-for-limit': 'error',
 				'n8n-nodes-base/node-param-multi-options-type-unsorted-items': 'error',
 				'n8n-nodes-base/node-param-name-untrimmed': 'error',
@@ -133,7 +133,6 @@ module.exports = {
 				'n8n-nodes-base/node-param-option-value-duplicate': 'error',
 				'n8n-nodes-base/node-param-options-type-unsorted-items': 'error',
 				'n8n-nodes-base/node-param-placeholder-miscased-id': 'error',
-				'n8n-nodes-base/node-param-placeholder-missing-email': 'error',
 				'n8n-nodes-base/node-param-placeholder-missing-email': 'error',
 				'n8n-nodes-base/node-param-required-false': 'error',
 				'n8n-nodes-base/node-param-resource-with-plural-option': 'error',
