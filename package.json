@@ -1,26 +1,26 @@
 {
-  "name": "n8n-nodes-<...>",
+  "name": "n8n-nodes-event-pattern",
   "version": "0.1.0",
-  "description": "",
+  "description": "Custom nodes for implement Event Listener Pattern in workflow invocation structure",
   "keywords": [
     "n8n-community-node-package"
   ],
   "license": "MIT",
   "homepage": "",
   "author": {
-    "name": "",
-    "email": ""
+    "name": "n8n Event Pattern Dev",
+    "email": "devteam@example.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/<...>/n8n-nodes-<...>.git"
+    "url": "https://github.com/EduardoDos-SantosP/n8n-nodes-event-pattern.git"
   },
   "engines": {
     "node": ">=20.15"
   },
   "main": "index.js",
   "scripts": {
-    "build": "npx rimraf dist && tsc && gulp build:icons",
+    "build": "npx rimraf dist && tsc",
     "dev": "tsc --watch",
     "format": "prettier nodes credentials --write",
     "lint": "eslint nodes credentials package.json",
@@ -33,23 +33,30 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/ExampleCredentialsApi.credentials.js",
-      "dist/credentials/HttpBinApi.credentials.js"
+      "dist/credentials/EventPatternApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/ExampleNode/ExampleNode.node.js",
-      "dist/nodes/HttpBin/HttpBin.node.js"
+      "dist/nodes/EventListenerTrigger/EventListenerTrigger.node.js",
+      "dist/nodes/EventEmitter/EventEmitter.node.js"
     ]
   },
+  "dependencies": {
+    "pg": "^8.11.1",
+    "redis": "^5.8.2"
+  },
   "devDependencies": {
+    "@types/pg": "^8.15.5",
+    "@types/redis": "^4.0.10",
     "@typescript-eslint/parser": "~8.32.0",
     "eslint": "^8.57.0",
     "eslint-plugin-n8n-nodes-base": "^1.16.3",
     "gulp": "^5.0.0",
+    "n8n-nodes-base": "^1.14.1",
     "prettier": "^3.5.3",
     "typescript": "^5.8.2"
   },
   "peerDependencies": {
+    "n8n-nodes-base": "*",
     "n8n-workflow": "*"
   }
 }
