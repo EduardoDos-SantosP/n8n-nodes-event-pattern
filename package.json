@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-event-pattern",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "Custom nodes for implement Event Listener Pattern in workflow invocation structure",
   "keywords": [
     "n8n-community-node-package"

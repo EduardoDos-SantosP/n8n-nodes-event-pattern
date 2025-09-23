@@ -6,7 +6,7 @@ export abstract class EventChannel<TName extends ChannelCredentialName = Channel
 	abstract readonly credentialName: TName;
 	abstract trigger(event: string, fn: ITriggerFunctions): Promise<ITriggerResponse>;
 
-	abstract publish(event: string, payload: object, nodeExecution?: IExecuteFunctions): Promise<void>;
+	abstract publish(event: string, payload: string, nodeExecution?: IExecuteFunctions): Promise<void>;
 
 	getCredential(nodeExecution: any): TCredential {
 		return nodeExecution.getCredentials(this.credentialName) as TCredential;

@@ -20,12 +20,23 @@ export class EventEmitter implements INodeType {
 		version: 1,
 		description: 'Emit events via a pluggable channel (currently Redis)',
 		defaults: {
-			name: 'Custom Event Emitter',
+			name: 'Event Emitter',
 		},
 		inputs: [<NodeConnectionType>'main'],
 		outputs: [<NodeConnectionType>'main'],
 		credentials: provider.toCredentialDescriptions(),
-		properties: [provider.getChannelNodeProperty(), new EventPatternApi().properties[0]],
+		properties: [
+			provider.getChannelNodeProperty(),
+			new EventPatternApi().properties[0],
+			{
+				displayName: 'Event Payload',
+				name: 'payload',
+				type: 'json',
+				default: '{}',
+				description: 'Event data payload to be emitted',
+				required: true,
+			},
+		],
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
@@ -37,7 +48,7 @@ export class EventEmitter implements INodeType {
 			try {
 				const channel = provider.getChannel(this, i);
 
-				const payload = this.getNodeParameter('payload', i, {}) as object;
+				const payload = this.getNodeParameter('payload', i, {}) as string;
 
 				const event = this.getNodeParameter(EventPatternApi.credentialName, i) as string;
 				if (!event) {
@@ -49,7 +60,12 @@ export class EventEmitter implements INodeType {
 				returnItems.push(item);
 			} catch (error) {
 				if (this.continueOnFail()) {
-					returnItems.push({ json: { error: String(error) } });
+					returnItems.push({
+						json: {
+							error: error.message,
+						},
+						pairedItem: { item: i },
+					});
 				} else {
 					throw new NodeOperationError(this.getNode(), error as Error, { itemIndex: i });
 				}
