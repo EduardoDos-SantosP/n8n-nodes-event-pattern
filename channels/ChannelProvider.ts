@@ -1,12 +1,12 @@
 import {
 	IExecuteFunctions,
+	INodeCredentialDescription,
 	INodeProperties,
 	INodePropertyOptions,
 	ITriggerFunctions,
 	NodeOperationError,
 } from 'n8n-workflow';
 import { channelPropertyName } from '../constants';
-import { ChannelCredentialName } from '../types';
 import { EventChannel } from './EventChannel';
 import { PostgresChannel } from './postgres/PostgresChannel';
 import { RedisChannel } from './redis/RedisChannel';
@@ -18,8 +18,9 @@ export class ChannelProvider {
 	};
 
 	get activeChannels(): EventChannel[] {
-		return Object.values(this.channels)
-			.filter(channel => !channel.inactive) as any as EventChannel[];
+		return Object.values(this.channels).filter(
+			(channel) => !channel.inactive,
+		) as any as EventChannel[];
 	}
 
 	/** @description Get default event channel */
@@ -28,14 +29,15 @@ export class ChannelProvider {
 	}
 
 	toCredentialOptions(): INodePropertyOptions[] {
-		return this.activeChannels.map(channel => ({
+		return this.activeChannels.map((channel) => ({
 			name: channel.credentialName[0].toUpperCase() + channel.credentialName.slice(1),
 			value: channel.credentialName,
 		}));
 	}
 
-	toCredentialDescriptions(): ({ name: ChannelCredentialName, required: true })[] {
-		return this.activeChannels.map(channel => ({
+	toCredentialDescriptions(): INodeCredentialDescription[] {
+		return this.activeChannels.map((channel) => ({
+			displayName: channel.credentialName[0].toUpperCase() + channel.credentialName.slice(1),
 			name: channel.credentialName,
 			required: true,
 		}));
@@ -54,7 +56,10 @@ export class ChannelProvider {
 	getChannel(fn: ITriggerFunctions): EventChannel;
 	getChannel(fn: IExecuteFunctions, itemIndex: number): EventChannel;
 	getChannel(fn: ITriggerFunctions | IExecuteFunctions, itemIndex?: number): EventChannel {
-		const channelName = fn.getNodeParameter(channelPropertyName, itemIndex) as keyof ChannelProvider['channels'];
+		const channelName = fn.getNodeParameter(
+			channelPropertyName,
+			itemIndex,
+		) as keyof ChannelProvider['channels'];
 		if (!channelName) {
 			throw new NodeOperationError(fn.getNode(), 'Channel not set');
 		}

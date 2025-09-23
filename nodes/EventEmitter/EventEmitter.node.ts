@@ -6,7 +6,7 @@ import type {
 } from 'n8n-workflow';
 import { type NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 import { ChannelProvider } from '../../channels/ChannelProvider';
-import { eventIcon } from '../../constants';
+import { eventCredentialDescription, eventIcon } from '../../constants';
 import { EventPatternApi } from '../../credentials/EventPatternApi.credentials';
 import type { IEvent } from '../../types';
 
@@ -25,12 +25,7 @@ export class EventEmitter implements INodeType {
 		},
 		inputs: [<NodeConnectionType>'main'],
 		outputs: [<NodeConnectionType>'main'],
-		credentials: [
-			{
-				name: EventPatternApi.credentialName,
-				required: true,
-			},
-		].concat(provider.toCredentialDescriptions()),
+		credentials: [eventCredentialDescription].concat(provider.toCredentialDescriptions()),
 		properties: [
 			provider.getChannelNodeProperty(),
 			{
