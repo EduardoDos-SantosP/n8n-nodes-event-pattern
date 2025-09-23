@@ -4,11 +4,11 @@ import type {
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
-import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
+import { type NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 import { ChannelProvider } from '../../channels/ChannelProvider';
 import { eventIcon } from '../../constants';
 import { EventPatternApi } from '../../credentials/EventPatternApi.credentials';
-import { IEvent } from '../../types';
+import type { IEvent } from '../../types';
 
 const provider = new ChannelProvider();
 
@@ -23,8 +23,8 @@ export class EventEmitter implements INodeType {
 		defaults: {
 			name: 'Custom Event Emitter',
 		},
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.Main],
+		inputs: [<NodeConnectionType>'main'],
+		outputs: [<NodeConnectionType>'main'],
 		credentials: [
 			{
 				name: EventPatternApi.credentialName,

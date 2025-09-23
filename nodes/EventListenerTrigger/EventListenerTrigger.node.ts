@@ -1,9 +1,9 @@
 import {
-	INodeType,
-	INodeTypeDescription,
-	ITriggerFunctions,
-	ITriggerResponse,
-	NodeConnectionType,
+	type INodeType,
+	type INodeTypeDescription,
+	type ITriggerFunctions,
+	type ITriggerResponse,
+	type NodeConnectionType,
 	NodeOperationError,
 } from 'n8n-workflow';
 import { ChannelProvider } from '../../channels/ChannelProvider';
@@ -26,7 +26,7 @@ export class EventListenerTrigger implements INodeType {
 			name: 'Event Listener Trigger',
 		},
 		inputs: [],
-		outputs: [NodeConnectionType.Main],
+		outputs: [<NodeConnectionType>'main'],
 		credentials: [
 			{
 				name: EventPatternApi.credentialName,
