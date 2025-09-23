@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-event-pattern",
-  "version": "0.6.5",
+  "version": "1.0.0",
   "description": "Custom nodes for implement Event Listener Pattern in workflow invocation structure",
   "keywords": [
     "n8n-community-node-package"
@@ -26,7 +26,6 @@
     "lint": "eslint nodes credentials package.json",
     "lintfix": "eslint nodes credentials package.json --fix",
     "prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials package.json",
-    "prepare": "npm run build",
     "test": "jest --coverage"
   },
   "files": [
@@ -57,7 +56,8 @@
     "gulp": "^5.0.1",
     "n8n-nodes-base": "^1.14.1",
     "prettier": "^3.5.3",
-    "tsx": "^4.20.5"
+    "tsx": "^4.20.5",
+    "ts-node": "^10.9.1"
   },
   "peerDependencies": {
     "n8n-workflow": "*"

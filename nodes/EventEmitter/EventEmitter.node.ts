@@ -50,7 +50,7 @@ export class EventEmitter implements INodeType {
 
 				const payload = this.getNodeParameter('payload', i, {}) as string;
 
-				const event = this.getNodeParameter(new EventPatternApi().properties[0].name, i) as string;
+				const event = this.getNodeParameter(new EventPatternApi().properties[0].name!, i) as string;
 				if (!event) {
 					throw new NodeOperationError(this.getNode(), 'Event name not set');
 				}

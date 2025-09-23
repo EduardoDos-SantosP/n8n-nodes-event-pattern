@@ -35,7 +35,7 @@ export class EventListenerTrigger implements INodeType {
 
 		const channel = provider.getChannel(this);
 
-		const event = this.getNodeParameter(new EventPatternApi().properties[0].name) as string;
+		const event = this.getNodeParameter(new EventPatternApi().properties[0].name!) as string;
 		if (!event) {
 			throw new NodeOperationError(this.getNode(), 'Event name not set');
 		}
