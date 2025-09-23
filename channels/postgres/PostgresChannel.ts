@@ -1,8 +1,8 @@
 import { ITriggerFunctions, ITriggerResponse } from 'n8n-workflow';
 import { EventChannel } from '../EventChannel';
 
-export class PostgresChannel extends EventChannel<'postgresApi'> {
-	readonly credentialName = 'postgresApi';
+export class PostgresChannel extends EventChannel<'postgres'> {
+	readonly credentialName = 'postgres';
 	readonly inactive = true;
 	trigger(event: string, fn: ITriggerFunctions): Promise<ITriggerResponse> {
 		throw new Error('Method not implemented.');

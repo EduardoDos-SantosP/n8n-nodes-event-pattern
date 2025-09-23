@@ -12,8 +12,6 @@ import { PostgresChannel } from './postgres/PostgresChannel';
 import { RedisChannel } from './redis/RedisChannel';
 
 export class ChannelProvider {
-	static readonly propertyName = 'channel';
-
 	readonly channels = {
 		postgres: new PostgresChannel(),
 		redis: new RedisChannel(),

@@ -14,7 +14,7 @@ const provider = new ChannelProvider();
 
 export class EventEmitter implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Custom Event Emitter',
+		displayName: 'Event Emitter',
 		name: 'eventEmitter',
 		icon: eventIcon,
 		group: ['transform'],
@@ -37,7 +37,7 @@ export class EventEmitter implements INodeType {
 				displayName: 'Event Payload',
 				name: 'payload',
 				type: 'json',
-				default: {},
+				default: '{}',
 				description: 'Event data payload to be emitted',
 			},
 		],
