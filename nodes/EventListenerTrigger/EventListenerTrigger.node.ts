@@ -1,15 +1,14 @@
 import {
-	INodeType,
-	INodeTypeDescription,
-	ITriggerFunctions,
-	ITriggerResponse,
-	NodeConnectionType,
+	type INodeType,
+	type INodeTypeDescription,
+	type ITriggerFunctions,
+	type ITriggerResponse,
+	type NodeConnectionType,
 	NodeOperationError,
 } from 'n8n-workflow';
 import { ChannelProvider } from '../../channels/ChannelProvider';
 import { eventIcon } from '../../constants';
 import { EventPatternApi } from '../../credentials/EventPatternApi.credentials';
-import { IEvent } from '../../types';
 
 const provider = new ChannelProvider();
 
@@ -26,26 +25,21 @@ export class EventListenerTrigger implements INodeType {
 			name: 'Event Listener Trigger',
 		},
 		inputs: [],
-		outputs: [NodeConnectionType.Main],
-		credentials: [
-			{
-				name: EventPatternApi.credentialName,
-				required: true,
-			},
-		].concat(provider.toCredentialDescriptions()),
-		properties: [provider.getChannelNodeProperty()],
+		outputs: [<NodeConnectionType>'main'],
+		credentials: provider.toCredentialDescriptions(),
+		properties: [provider.getChannelNodeProperty(), new EventPatternApi().properties[0]],
 	};
 
 	async trigger(this: ITriggerFunctions): Promise<ITriggerResponse> {
-		this.logger.debug('Event Listener Trigger started');
+		this.logger.info('Event Listener Trigger started');
 
 		const channel = provider.getChannel(this);
 
-		const event = await this.getCredentials<IEvent>(EventPatternApi.credentialName);
+		const event = this.getNodeParameter(new EventPatternApi().properties[0].name) as string;
 		if (!event) {
-			throw new NodeOperationError(this.getNode(), 'Event name not set in Custom Event credential');
+			throw new NodeOperationError(this.getNode(), 'Event name not set');
 		}
 
-		return await channel.trigger(event.eventName, this);
+		return await channel.trigger(event, this);
 	}
 }

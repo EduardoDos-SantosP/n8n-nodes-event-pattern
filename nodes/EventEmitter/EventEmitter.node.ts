@@ -4,41 +4,37 @@ import type {
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
-import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
+import { type NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 import { ChannelProvider } from '../../channels/ChannelProvider';
 import { eventIcon } from '../../constants';
 import { EventPatternApi } from '../../credentials/EventPatternApi.credentials';
-import { IEvent } from '../../types';
 
 const provider = new ChannelProvider();
 
 export class EventEmitter implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Custom Event Emitter',
+		displayName: 'Event Emitter',
 		name: 'eventEmitter',
 		icon: eventIcon,
 		group: ['transform'],
 		version: 1,
 		description: 'Emit events via a pluggable channel (currently Redis)',
 		defaults: {
-			name: 'Custom Event Emitter',
+			name: 'Event Emitter',
 		},
-		inputs: [NodeConnectionType.Main],
-		outputs: [NodeConnectionType.Main],
-		credentials: [
-			{
-				name: EventPatternApi.credentialName,
-				required: true,
-			},
-		].concat(provider.toCredentialDescriptions()),
+		inputs: [<NodeConnectionType>'main'],
+		outputs: [<NodeConnectionType>'main'],
+		credentials: provider.toCredentialDescriptions(),
 		properties: [
 			provider.getChannelNodeProperty(),
+			new EventPatternApi().properties[0],
 			{
 				displayName: 'Event Payload',
 				name: 'payload',
 				type: 'json',
-				default: {},
+				default: '{}',
 				description: 'Event data payload to be emitted',
+				required: true,
 			},
 		],
 	};
@@ -46,25 +42,30 @@ export class EventEmitter implements INodeType {
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 
-		const event = await this.getCredentials<IEvent>(EventPatternApi.credentialName);
-		if (!event) {
-			throw new NodeOperationError(this.getNode(), 'Event name not set in Custom Event credential');
-		}
-
 		const returnItems: INodeExecutionData[] = [];
 		for (let i = 0; i < items.length; i++) {
 			const item = items[i];
 			try {
 				const channel = provider.getChannel(this, i);
 
-				const payload = this.getNodeParameter('payload', i, {}) as object;
+				const payload = this.getNodeParameter('payload', i, {}) as string;
 
-				await channel.publish(event.eventName, payload, this);
+				const event = this.getNodeParameter(new EventPatternApi().properties[0].name, i) as string;
+				if (!event) {
+					throw new NodeOperationError(this.getNode(), 'Event name not set');
+				}
+
+				await channel.publish(event, payload, this);
 
 				returnItems.push(item);
 			} catch (error) {
 				if (this.continueOnFail()) {
-					returnItems.push({ json: { error: String(error) } });
+					returnItems.push({
+						json: {
+							error: error.message,
+						},
+						pairedItem: { item: i },
+					});
 				} else {
 					throw new NodeOperationError(this.getNode(), error as Error, { itemIndex: i });
 				}
