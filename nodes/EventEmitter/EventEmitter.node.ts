@@ -6,9 +6,8 @@ import type {
 } from 'n8n-workflow';
 import { type NodeConnectionType, NodeOperationError } from 'n8n-workflow';
 import { ChannelProvider } from '../../channels/ChannelProvider';
-import { eventCredentialDescription, eventIcon } from '../../constants';
+import { eventIcon } from '../../constants';
 import { EventPatternApi } from '../../credentials/EventPatternApi.credentials';
-import type { IEvent } from '../../types';
 
 const provider = new ChannelProvider();
 
@@ -25,26 +24,12 @@ export class EventEmitter implements INodeType {
 		},
 		inputs: [<NodeConnectionType>'main'],
 		outputs: [<NodeConnectionType>'main'],
-		credentials: [eventCredentialDescription].concat(provider.toCredentialDescriptions()),
-		properties: [
-			provider.getChannelNodeProperty(),
-			{
-				displayName: 'Event Payload',
-				name: 'payload',
-				type: 'json',
-				default: '{}',
-				description: 'Event data payload to be emitted',
-			},
-		],
+		credentials: provider.toCredentialDescriptions(),
+		properties: [provider.getChannelNodeProperty(), new EventPatternApi().properties[0]],
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
-
-		const event = await this.getCredentials<IEvent>(EventPatternApi.credentialName);
-		if (!event) {
-			throw new NodeOperationError(this.getNode(), 'Event name not set in Custom Event credential');
-		}
 
 		const returnItems: INodeExecutionData[] = [];
 		for (let i = 0; i < items.length; i++) {
@@ -54,7 +39,12 @@ export class EventEmitter implements INodeType {
 
 				const payload = this.getNodeParameter('payload', i, {}) as object;
 
-				await channel.publish(event.eventName, payload, this);
+				const event = this.getNodeParameter(EventPatternApi.credentialName, i) as string;
+				if (!event) {
+					throw new NodeOperationError(this.getNode(), 'Event name not set');
+				}
+
+				await channel.publish(event, payload, this);
 
 				returnItems.push(item);
 			} catch (error) {

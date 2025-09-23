@@ -7,9 +7,8 @@ import {
 	NodeOperationError,
 } from 'n8n-workflow';
 import { ChannelProvider } from '../../channels/ChannelProvider';
-import { eventCredentialDescription, eventIcon } from '../../constants';
+import { eventIcon } from '../../constants';
 import { EventPatternApi } from '../../credentials/EventPatternApi.credentials';
-import { IEvent } from '../../types';
 
 const provider = new ChannelProvider();
 
@@ -27,8 +26,8 @@ export class EventListenerTrigger implements INodeType {
 		},
 		inputs: [],
 		outputs: [<NodeConnectionType>'main'],
-		credentials: [eventCredentialDescription].concat(provider.toCredentialDescriptions()),
-		properties: [provider.getChannelNodeProperty()],
+		credentials: provider.toCredentialDescriptions(),
+		properties: [provider.getChannelNodeProperty(), new EventPatternApi().properties[0]],
 	};
 
 	async trigger(this: ITriggerFunctions): Promise<ITriggerResponse> {
@@ -36,11 +35,11 @@ export class EventListenerTrigger implements INodeType {
 
 		const channel = provider.getChannel(this);
 
-		const event = await this.getCredentials<IEvent>(EventPatternApi.credentialName);
+		const event = this.getNodeParameter(EventPatternApi.credentialName) as string;
 		if (!event) {
-			throw new NodeOperationError(this.getNode(), 'Event name not set in Custom Event credential');
+			throw new NodeOperationError(this.getNode(), 'Event name not set');
 		}
 
-		return await channel.trigger(event.eventName, this);
+		return await channel.trigger(event, this);
 	}
 }

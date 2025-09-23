@@ -14,7 +14,7 @@ import { RedisChannel } from './redis/RedisChannel';
 export class ChannelProvider {
 	readonly channels = {
 		postgres: new PostgresChannel(),
-		redis: new RedisChannel(),
+		redisApi: new RedisChannel(),
 	};
 
 	get activeChannels(): EventChannel[] {

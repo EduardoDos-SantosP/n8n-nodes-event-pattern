@@ -1,9 +1,9 @@
 import type { ICredentialType, INodeProperties } from 'n8n-workflow';
 
-export class Redis implements ICredentialType {
-	static readonly credentialName = 'redis';
+export class RedisApi implements ICredentialType {
+	static readonly credentialName = 'redisApi';
 
-	name = Redis.credentialName;
+	name = RedisApi.credentialName;
 	displayName = 'Redis';
 	properties: INodeProperties[] = [
 		{

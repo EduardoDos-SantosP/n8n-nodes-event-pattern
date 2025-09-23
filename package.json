@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-event-pattern",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Custom nodes for implement Event Listener Pattern in workflow invocation structure",
   "keywords": [
     "n8n-community-node-package"
@@ -34,8 +34,7 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "credentials": [
-      "dist/credentials/Redis.credentials.js",
-      "dist/credentials/EventPatternApi.credentials.js"
+      "dist/credentials/RedisApi.credentials.js"
     ],
     "nodes": [
       "dist/nodes/EventListenerTrigger/EventListenerTrigger.node.js",
