@@ -26,5 +26,8 @@
 		"nodes/**/*",
 		"nodes/**/*.json",
 		"package.json",
+		"channels/**/*",
+		"__tests__/**/*",
+		"types/**/*"
 	],
 }
