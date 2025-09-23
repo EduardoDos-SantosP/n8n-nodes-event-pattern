@@ -14,7 +14,7 @@ import { RedisChannel } from './redis/RedisChannel';
 export class ChannelProvider {
 	readonly channels = {
 		postgres: new PostgresChannel(),
-		redisApi: new RedisChannel(),
+		redis: new RedisChannel(),
 	};
 
 	get activeChannels(): EventChannel[] {
@@ -37,7 +37,7 @@ export class ChannelProvider {
 
 	toCredentialDescriptions(): INodeCredentialDescription[] {
 		return this.activeChannels.map((channel) => ({
-			displayName: channel.credentialName[0].toUpperCase() + channel.credentialName.slice(1),
+			// displayName: channel.credentialName[0].toUpperCase() + channel.credentialName.slice(1),
 			name: channel.credentialName,
 			required: true,
 		}));

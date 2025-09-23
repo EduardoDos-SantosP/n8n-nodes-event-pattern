@@ -3,8 +3,8 @@ import { createClient } from 'redis';
 import { EventChannel } from '../EventChannel';
 import type { RedisCredential } from './RedisCredential';
 
-export class RedisChannel extends EventChannel<'redisApi', RedisCredential> {
-	readonly credentialName = 'redisApi';
+export class RedisChannel extends EventChannel<'redis', RedisCredential> {
+	readonly credentialName = 'redis';
 
 	private readonly channelPrefix = 'n8n-event-pattern-';
 
