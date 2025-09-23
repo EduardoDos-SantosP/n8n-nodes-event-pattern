@@ -1,4 +1,4 @@
-import { IExecuteFunctions, ITriggerFunctions, type ITriggerResponse } from 'n8n-workflow';
+import { FunctionsBase, IExecuteFunctions, ITriggerFunctions, type ITriggerResponse } from 'n8n-workflow';
 import { ChannelCredentialName } from '../types';
 
 export abstract class EventChannel<TName extends ChannelCredentialName = ChannelCredentialName, TCredential = any> {
@@ -8,7 +8,7 @@ export abstract class EventChannel<TName extends ChannelCredentialName = Channel
 
 	abstract publish(event: string, payload: string, nodeExecution?: IExecuteFunctions): Promise<void>;
 
-	getCredential(nodeExecution: any): TCredential {
-		return nodeExecution.getCredentials(this.credentialName) as TCredential;
+	getCredential(fn: FunctionsBase): TCredential {
+		return fn.getCredentials(this.credentialName) as TCredential;
 	}
 }

@@ -1,4 +1,4 @@
-import { IExecuteFunctions, ITriggerFunctions, ITriggerResponse } from 'n8n-workflow';
+import { FunctionsBase, IExecuteFunctions, ITriggerFunctions, ITriggerResponse } from 'n8n-workflow';
 import { createClient } from 'redis';
 import { EventChannel } from '../EventChannel';
 import type { RedisCredential } from './RedisCredential';
@@ -8,7 +8,8 @@ export class RedisChannel extends EventChannel<'redis', RedisCredential> {
 
 	private readonly channelPrefix = 'n8n-event-pattern-';
 
-	private static createClient(credential: RedisCredential, isTest: boolean = false) {
+	private createClient(fn: FunctionsBase, isTest: boolean = false) {
+		const credential = this.getCredential(fn);
 		const socketConfig: any = {
 			host: credential.host,
 			port: credential.port,
@@ -16,6 +17,8 @@ export class RedisChannel extends EventChannel<'redis', RedisCredential> {
 			connectTimeout: 10000,
 			reconnectStrategy: isTest ? false : undefined,
 		};
+
+		fn.logger.info(`Connecting to Redis: ${JSON.stringify(socketConfig)}`);
 
 		if (credential.ssl === true && credential.disableTlsVerification === true) {
 			socketConfig.rejectUnauthorized = false;
@@ -34,12 +37,9 @@ export class RedisChannel extends EventChannel<'redis', RedisCredential> {
 	}
 
 	async trigger(event: string, fn: ITriggerFunctions): Promise<ITriggerResponse> {
-		fn.logger.debug('Redis Event Channel Trigger started');
+		fn.logger.info('Redis Event Channel Trigger started');
 
-		const credential = this.getCredential(fn);
-		const client = RedisChannel.createClient(credential);
-
-		const channelName = this.channelPrefix + event;
+		const client = this.createClient(fn);
 		await client.connect();
 		await client.ping();
 
@@ -50,6 +50,7 @@ export class RedisChannel extends EventChannel<'redis', RedisCredential> {
 			fn.emit([fn.helpers.returnJsonArray(data)]);
 		};
 
+		const channelName = this.channelPrefix + event;
 		const manualTriggerFunction = async () =>
 			await new Promise<void>(async (resolve) => {
 				await client.pSubscribe(channelName, (message) => {
@@ -74,10 +75,9 @@ export class RedisChannel extends EventChannel<'redis', RedisCredential> {
 	}
 
 	async publish(event: string, payload: string, fn: IExecuteFunctions): Promise<void> {
-		fn.logger.debug('Redis Event Channel Publish started');
+		fn.logger.info('Redis Event Channel Publish started');
 
-		const credential = this.getCredential(fn);
-		const client = RedisChannel.createClient(credential);
+		const client = this.createClient(fn);
 		try {
 			await client.connect();
 			await client.ping();

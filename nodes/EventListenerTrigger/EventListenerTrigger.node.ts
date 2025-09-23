@@ -31,7 +31,7 @@ export class EventListenerTrigger implements INodeType {
 	};
 
 	async trigger(this: ITriggerFunctions): Promise<ITriggerResponse> {
-		this.logger.debug('Event Listener Trigger started');
+		this.logger.info('Event Listener Trigger started');
 
 		const channel = provider.getChannel(this);
 
