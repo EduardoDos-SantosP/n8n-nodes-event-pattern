@@ -1,7 +1,7 @@
 import type { ICredentialType, INodeProperties } from 'n8n-workflow';
 
 export class Redis implements ICredentialType {
-	static readonly credentialName = 'string';
+	static readonly credentialName = 'redis';
 
 	name = Redis.credentialName;
 	displayName = 'Redis';
