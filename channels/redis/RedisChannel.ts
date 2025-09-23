@@ -32,8 +32,8 @@ export class RedisChannel extends EventChannel<'redis', RedisCredential> {
 		return createClient({
 			socket: socketConfig,
 			database: credential.database,
-			username: credential.user ?? undefined,
-			password: credential.password ?? undefined,
+			username: credential.user || undefined,
+			password: credential.password || undefined,
 			...(isTest && {
 				disableOfflineQueue: true,
 				enableOfflineQueue: false,
