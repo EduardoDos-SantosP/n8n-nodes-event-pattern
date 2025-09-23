@@ -1,4 +1,9 @@
-import { FunctionsBase, IExecuteFunctions, ITriggerFunctions, ITriggerResponse } from 'n8n-workflow';
+import {
+	FunctionsBase,
+	IExecuteFunctions,
+	ITriggerFunctions,
+	ITriggerResponse,
+} from 'n8n-workflow';
 import { createClient } from 'redis';
 import { EventChannel } from '../EventChannel';
 import type { RedisCredential } from './RedisCredential';
@@ -8,8 +13,8 @@ export class RedisChannel extends EventChannel<'redis', RedisCredential> {
 
 	private readonly channelPrefix = 'n8n-event-pattern-';
 
-	private createClient(fn: FunctionsBase, isTest: boolean = false) {
-		const credential = this.getCredential(fn);
+	private async createClient(fn: FunctionsBase, isTest: boolean = false) {
+		const credential = await this.getCredential(fn);
 		const socketConfig: any = {
 			host: credential.host,
 			port: credential.port,
@@ -39,7 +44,7 @@ export class RedisChannel extends EventChannel<'redis', RedisCredential> {
 	async trigger(event: string, fn: ITriggerFunctions): Promise<ITriggerResponse> {
 		fn.logger.info('Redis Event Channel Trigger started');
 
-		const client = this.createClient(fn);
+		const client = await this.createClient(fn);
 		await client.connect();
 		await client.ping();
 
@@ -77,7 +82,7 @@ export class RedisChannel extends EventChannel<'redis', RedisCredential> {
 	async publish(event: string, payload: string, fn: IExecuteFunctions): Promise<void> {
 		fn.logger.info('Redis Event Channel Publish started');
 
-		const client = this.createClient(fn);
+		const client = await this.createClient(fn);
 		try {
 			await client.connect();
 			await client.ping();
