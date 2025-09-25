@@ -5,11 +5,9 @@ import type {
 	INodeTypeDescription,
 } from 'n8n-workflow';
 import { type NodeConnectionType, NodeOperationError } from 'n8n-workflow';
-import { ChannelProvider } from '../../channels/ChannelProvider';
+import { channelProvider } from '../../channels/ChannelProvider';
 import { eventIcon } from '../../constants';
 import { EventPatternApi } from '../../credentials/EventPatternApi.credentials';
-
-const provider = new ChannelProvider();
 
 export class EventEmitter implements INodeType {
 	description: INodeTypeDescription = {
@@ -24,9 +22,9 @@ export class EventEmitter implements INodeType {
 		},
 		inputs: [<NodeConnectionType>'main'],
 		outputs: [<NodeConnectionType>'main'],
-		credentials: provider.toCredentialDescriptions(),
+		credentials: channelProvider.toCredentialDescriptions(),
 		properties: [
-			provider.getChannelNodeProperty(),
+			channelProvider.getChannelNodeProperty(),
 			new EventPatternApi().properties[0],
 			{
 				displayName: 'Event Payload',
@@ -46,11 +44,11 @@ export class EventEmitter implements INodeType {
 		for (let i = 0; i < items.length; i++) {
 			const item = items[i];
 			try {
-				const channel = provider.getChannel(this, i);
+				const channel = channelProvider.getChannel(this, i);
 
 				const payload = this.getNodeParameter('payload', i, {}) as string;
 
-				const event = this.getNodeParameter(new EventPatternApi().properties[0].name, i) as string;
+				const event = this.getNodeParameter(new EventPatternApi().properties[0].name!, i) as string;
 				if (!event) {
 					throw new NodeOperationError(this.getNode(), 'Event name not set');
 				}

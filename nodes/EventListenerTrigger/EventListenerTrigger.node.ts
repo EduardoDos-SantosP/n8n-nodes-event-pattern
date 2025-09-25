@@ -1,45 +1,25 @@
-import {
-	type INodeType,
-	type INodeTypeDescription,
-	type ITriggerFunctions,
-	type ITriggerResponse,
-	type NodeConnectionType,
-	NodeOperationError,
-} from 'n8n-workflow';
-import { ChannelProvider } from '../../channels/ChannelProvider';
-import { eventIcon } from '../../constants';
-import { EventPatternApi } from '../../credentials/EventPatternApi.credentials';
+import { ApplicationError, INodeType, IVersionedNodeType } from 'n8n-workflow';
+import { eventListenerNodeBaseDescription } from '../../utils';
+import { EventListenerTriggerV1 } from './EventListenerTriggerV1';
 
-const provider = new ChannelProvider();
-
-export class EventListenerTrigger implements INodeType {
-	description: INodeTypeDescription = {
-		displayName: 'Event Listener Trigger',
-		name: 'eventListenerTrigger',
-		icon: eventIcon,
-		group: ['trigger'],
-		version: 1,
-		subtitle: 'Listens for configured events',
-		description: 'Trigger that listens for configured events via the selected channel',
-		defaults: {
-			name: 'Event Listener Trigger',
-		},
-		inputs: [],
-		outputs: [<NodeConnectionType>'main'],
-		credentials: provider.toCredentialDescriptions(),
-		properties: [provider.getChannelNodeProperty(), new EventPatternApi().properties[0]],
+export class EventListenerTrigger implements IVersionedNodeType {
+	nodeVersions: IVersionedNodeType['nodeVersions'] = {
+		1: new EventListenerTriggerV1(),
 	};
 
-	async trigger(this: ITriggerFunctions): Promise<ITriggerResponse> {
-		this.logger.info('Event Listener Trigger started');
+	description = eventListenerNodeBaseDescription;
 
-		const channel = provider.getChannel(this);
+	get currentVersion(): number {
+		return Math.max(...Object.keys(this.nodeVersions).map((k) => +k));
+	}
 
-		const event = this.getNodeParameter(new EventPatternApi().properties[0].name) as string;
-		if (!event) {
-			throw new NodeOperationError(this.getNode(), 'Event name not set');
+	getNodeType(version?: number): INodeType {
+		const node = this.nodeVersions[version ?? this.currentVersion];
+		if (!node) {
+			throw new ApplicationError(
+				`The version "${version}" of the node "${this.description.displayName}" does not exist!`,
+			);
 		}
-
-		return await channel.trigger(event, this);
+		return node;
 	}
 }

@@ -92,7 +92,7 @@ describe('RedisChannel', () => {
     expect(fn.emit).toHaveBeenCalled();
 
     // close function should unsubscribe and quit
-    await triggerResponse.closeFunction();
+    if (triggerResponse.closeFunction) await triggerResponse.closeFunction();
     expect(mockClient.pUnsubscribe).toHaveBeenCalled();
     expect(mockClient.quit).toHaveBeenCalled();
   });
@@ -121,7 +121,7 @@ describe('RedisChannel', () => {
     expect(fn.emit).toHaveBeenCalled();
 
     // ensure close unsubscribes and quits
-    await triggerResponse.closeFunction();
+    if (triggerResponse.closeFunction) await triggerResponse.closeFunction();
     expect(mockClient.pUnsubscribe).toHaveBeenCalled();
     expect(mockClient.quit).toHaveBeenCalled();
   });

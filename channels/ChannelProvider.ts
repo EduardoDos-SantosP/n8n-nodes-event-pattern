@@ -37,7 +37,7 @@ export class ChannelProvider {
 
 	toCredentialDescriptions(): INodeCredentialDescription[] {
 		return this.activeChannels.map((channel) => ({
-			// displayName: channel.credentialName[0].toUpperCase() + channel.credentialName.slice(1),
+			displayName: channel.credentialName[0].toUpperCase() + channel.credentialName.slice(1),
 			name: channel.credentialName,
 			required: true,
 		}));
@@ -70,3 +70,5 @@ export class ChannelProvider {
 		return channel;
 	}
 }
+
+export const channelProvider = new ChannelProvider();
