@@ -36,7 +36,8 @@
     "credentials": [],
     "nodes": [
       "dist/nodes/EventListenerTrigger/EventListenerTrigger.node.js",
-      "dist/nodes/EventEmitter/EventEmitter.node.js"
+      "dist/nodes/EventEmitter/EventEmitter.node.js",
+      "dist/nodes/EventManager/EventManager.node.js"
     ]
   },
   "dependencies": {
