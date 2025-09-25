@@ -11,6 +11,7 @@ import {
 } from 'n8n-workflow';
 import { repositoryProvider } from '../../repositories/RepositoryProvider';
 import { ICreateEventDto } from '../../types';
+import { tryGetParameter } from '../../utils';
 
 export class EventManager implements INodeType {
 	description: INodeTypeDescription = {
@@ -130,6 +131,7 @@ export class EventManager implements INodeType {
 			},
 		],
 	};
+	
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items: INodeExecutionData[] = [];
@@ -144,11 +146,11 @@ export class EventManager implements INodeType {
 
 				const repo = repositoryProvider.getRepository();
 
-				const name = this.getNodeParameter('name', i) as string;
-				const description = this.getNodeParameter('description', i) as string;
-				const returnAll = this.getNodeParameter('returnAll', i) as boolean;
-				const limit = this.getNodeParameter('limit', i) as number | undefined;
-				const offset = this.getNodeParameter('offset', i) as number | undefined;
+				const name = tryGetParameter<string>(this, 'name', i);
+				const description = tryGetParameter<string>(this, 'description', i);
+				const returnAll = tryGetParameter<boolean>(this, 'returnAll', i);
+				const limit = tryGetParameter<number>(this, 'limit', i);
+				const offset = tryGetParameter<number>(this, 'offset', i);
 
 				switch (operation) {
 					case 'create': {
